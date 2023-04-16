@@ -6,7 +6,7 @@ const mysql = require('mysql');
 const routes = require('./routes/routes.js');
 
 const app = express();
-const port = 3000; //Port number
+const port = 8080; //Port number
 
 app.use(express.static(__dirname + "/public"));
 
