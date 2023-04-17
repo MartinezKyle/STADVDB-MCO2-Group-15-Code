@@ -21,5 +21,5 @@ else {
   config.host = process.env.DB_HOST2;
 }
 
-let connection = mysql.createConnection(config);
+let pool = mysql.createConnection(config);
 module.exports = pool;
