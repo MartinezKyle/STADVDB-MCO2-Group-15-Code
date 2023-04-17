@@ -1,21 +1,36 @@
 {
-  "name": "stadvdb-mco2-group-3",
+  "name": "mc02-transaction-management",
   "version": "1.0.0",
-  "description": "",
+  "description": "MC02 Transaction Management System",
   "main": "index.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "nodemon": "nodemon index.js -e js,scss"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/louisaboy/MC02-Transaction-Management.git"
+  },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/louisaboy/MC02-Transaction-Management/issues"
+  },
+  "homepage": "https://github.com/louisaboy/MC02-Transaction-Management#readme",
   "dependencies": {
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "express-handlebars": "^7.0.7",
-    "http": "^0.0.1-security",
+    "body-parser": "^1.19.1",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "express-handlebars": "^6.0.2",
+    "fs": "^0.0.1-security",
+    "handlebars": "^4.7.7",
+    "handlebars-paginate": "^0.1.0",
+    "hbs": "^4.2.0",
     "mysql": "^2.18.1",
-    "path": "^0.12.7"
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.15",
+    "path": "^0.12.7",
+    "sql": "^0.78.0"
   }
 }

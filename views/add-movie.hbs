@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>MC02 Transactions</title>
+        <link rel="stylesheet" href="\css\form.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="\script\script.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <a href="/"><button id="back-button">Back</button></a>
+            <h1>Add Movie</h1>
+                <label>Movie Title</label>
+                <input type="text" name="name" class="name" id="name" placeholder="Movie Title" require><br>
+                <label for="year">Year of Release</label>
+                <select id="year" require></select><br>
+                <label>Rank</label>
+                <input type="text" name="rank" class="rank" id="rank" placeholder="Rank" require><br>
+                <button id="add-button">Add Movie</button>
+        </div>
+    </body>
+    </html>
+    
+    <script>
+        // For Year Dropdown
+        $(document).ready(function() {
+            let dateDropdown = document.getElementById('year'); 
+                        
+            let currentYear = new Date().getFullYear();    
+            let earliestYear = 1970;     
+            while (currentYear >= earliestYear) {      
+                let dateOption = document.createElement('option');          
+                dateOption.text = currentYear;      
+                dateOption.value = currentYear;        
+                dateDropdown.add(dateOption);      
+                currentYear -= 1;    
+            };
+
+            $('#add-button').click(function() {
+                console.log("was here");
+                var name = $('#name').val();
+                var year = $('#year').find(":selected").text();
+                var rank = $('#rank').val();
+                $.post('/add-movie', {name: name, year: year, rank: rank},function(err) {
+                    if(err) throw err
+                });
+                setTimeout('location.assign("/")', 2000);
+            });
+        });
+        
+    </script>

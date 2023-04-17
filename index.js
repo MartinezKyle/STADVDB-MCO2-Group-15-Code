@@ -1,39 +1,82 @@
-const http = require('http');
-const path = require('path');
-const express = require('express');
-const exphbs = require('express-handlebars');
-const mysql = require('mysql');
-const routes = require('./routes/routes.js');
-require('dotenv').config()
+const db1 = require(`./models/database1.js`);
+// const db2 = require(`./models/database2.js`);
+// const db3 = require(`./models/database2.js`);
+var dotenv = require('dotenv').config();
+var express = require('express');
+const hbs = require(`hbs`);
+const routes = require(`./routes/routes.js`);
+var app = express();
+const bodyparser = require('body-parser');
+var paginate = require('handlebars-paginate');
 
-const app = express();
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
+app.use(express.static(`public`));
 
-app.use(express.static(__dirname + "/public"));
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: false }));
 
-app.engine("hbs", exphbs.engine({extname: 'hbs'})); 
-app.set("view engine", "hbs");
-app.set("views", "./views");
+app.set(`view engine`, `hbs`);
+hbs.registerPartials(__dirname + `/views/partials`);
+hbs.registerHelper('paginate', paginate);
+hbs.registerHelper('pagination', function(currentPage, totalPage, size, options) {
+    var startPage, endPage, context;
+    
+    if (arguments.length === 3) {
+      options = size;
+      size = 5;
+    }
+  
+    startPage = currentPage - Math.floor(size / 2);
+    endPage = currentPage + Math.floor(size / 2);
+  
+
+    if (startPage <= 0) {
+      endPage -= (startPage - 1);
+      startPage = 1;
+    }
+  
+    if (endPage > totalPage) {
+      endPage = totalPage;
+      if (endPage - size + 1 > 0) {
+        startPage = endPage - size + 1;
+      } else {
+        startPage = 1;
+      }
+    }
+  
+    context = {
+      startFromFirstPage: false,
+      pages: [],
+      endAtLastPage: false,
+      lastPage: totalPage
+    };
+    if (startPage === 1) {
+      context.startFromFirstPage = true;
+    }
+    for (var i = startPage; i <= endPage; i++) {
+      context.pages.push({
+        page: i,
+        isCurrent: i === currentPage,
+      });
+    }
+    if (endPage === totalPage) {
+      context.endAtLastPage = true;
+    }
+    return options.fn(context);
+  });
+
+var template = hbs.compile(".pagination pagination-centered");
+var html = template({pagination: {
+    page: 3,
+    pageCount: 10
+}});
+
+const port = process.env.PORT || 3000;
 
 app.use(`/`, routes);
 
-/* Edit the details for diff connections
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'user',
-    password: '1234567890',
-  });
-  
-  connection.connect((error) => {
-    if(error){
-      console.log('Error connecting to the MySQL Database');
-      return;
-    }
-    console.log('Connection established sucessfully');
-  });
-  connection.end((error) => {
-  });
-*/
-const port = process.env.PORT || 8080;
-app.listen(port, () => {
-    console.log("Currently listening at Port " + port);
+app.listen(port, function () {
+    console.log(`Server is running at:`);
+    console.log(`http://` + "localhost" + `:` + port);
 });

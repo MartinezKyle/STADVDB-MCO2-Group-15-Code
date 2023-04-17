@@ -1,13 +1,70 @@
-<html lang="en">
-
+<html>
     <head>
-        <!--<link rel="stylesheet" href="/css/style.css" />-->
-        <!--<link rel="stylesheet" href="/css/authentication.css" />-->
-        <!--<script type="text/javascript" src="/js/login.js"></script>-->
-        <title>Index</title>
+        <title>MC02 Transactions</title>
+        <link rel="stylesheet" href="css\style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
-
     <body>
-        <h1>Hello, World!</h1>
+        <h1 style="text-align: center;">MC02 Transaction Management </h1><a href="/add-movie" ><button id="add-movie" style="margin-right: auto; margin-left: auto; display: block">Add Movie</button></a>
+        <br>
+        <table>
+            <thead>
+                <tr>
+                    <th id="title">Title</th>
+                    <th id="year">Year</th>
+                    <th id="rank">Rank</th>
+                    <th id="Actions">Actions</th>
+                </tr>
+            </thead>
+                <tbody>
+                {{#each movies}}
+                    <tr>
+                        <td>{{name}}</td>
+                        <td>{{year}}</td>
+                        <td>{{rank}}</td>
+                        <td>
+                        <a href="/edit-movie/{{id}}-{{year}}"><button id="edit-button">Edit</button></a>
+                        <a href="/delete-movie/{{id}}-{{year}}-{{name}}-{{rank}}"><button id="delete-button">Delete</button></a>
+                        </td>
+                    </tr>
+                {{else}}
+                    <p>No movies to display</p>
+                {{/each}}
+                </tbody>
+        </table>
+        <br>
+        {{#pagination currentPage pageCount size}}
+            <div class="pagination">
+            {{#unless startFromFirstPage}}
+                <a href="/?page=1">&lt;</a>
+            {{/unless}}
+            
+            {{#each pages}}
+                {{#if isCurrent}}
+                <a href="/?page={{page}}">[{{page}}]</a>
+                {{/if}}
+                {{#unless isCurrent}}
+                <a href="/?page={{page}}" >{{page}}</a>
+                {{/unless}}
+            {{/each}}
+            
+            {{#unless endAtLastPage}}
+                <a href="/?page={{lastPage}}" id="endPage">&gt;</a>
+            {{/unless}}
+            </div>
+        {{/pagination}}
+        
+        
     </body>
+    
 </html>
+<script>
+    $(document).ready(function(){
+        var page;
+        $('#endPage').click(function(){
+            $()
+        });
+    })
+</script>
+
+

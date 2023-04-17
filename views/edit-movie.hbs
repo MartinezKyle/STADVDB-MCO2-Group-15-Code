@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title>MC02 Transactions</title>
+        <link rel="stylesheet" href="\css\form.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="\script\script.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <a href="/"><button id="back-button">Back</button></a>
+            <h1>Edit Movie</h1>        
+                <label>Movie Title</label>
+                <input type="text" name="name" class="name" id="name" value="{{name}}" required><br>
+                <label for="year">Year of Release</label>
+                <select id="year" name="year" required>
+                    <option value="" selected> {{year}}</option>
+                </select><br>
+                <label>Rank</label>
+                <input type="text" name="rank" class="rank" id="rank" value="{{rank}}" required><br>
+                <button id="submit" >Submit</button>
+                <span id="id"style="color:#f2f2f2">{{id}}</span>
+                <span id="oldYear"style="color:#f2f2f2">{{year}}</span>
+        </div>
+    </body>
+</html>
+
+<script>
+    $(document).ready(function(){
+        let dateDropdown = document.getElementById('year'); 
+            
+        let currentYear = new Date().getFullYear();    
+        let earliestYear = 1970;     
+        while (currentYear >= earliestYear) {      
+            let dateOption = document.createElement('option');          
+            dateOption.text = currentYear;      
+            dateOption.value = currentYear;        
+            dateDropdown.add(dateOption);      
+            currentYear -= 1;    
+        };
+
+        $('#submit').click(function(err) {
+            var name = $('#name').val();  
+            var year = $('#year').find(":selected").text();
+            var rank = $('#rank').val();
+            var id = document.getElementById("id").innerText;
+            var oldYear = document.getElementById("oldYear").innerText;
+            $.post('/edit-movie', {id: id, name: name, year: year, rank: rank, oldYear:oldYear}, function(err){
+            if (err) throw err;
+            });
+            setTimeout('location.assign("/")', 500);
+        });
+        
+    });
+    // For Year Dropdown
+    
+</script>
