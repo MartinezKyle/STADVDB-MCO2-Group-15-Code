@@ -104,7 +104,7 @@ function recover () {
                     if (result[i].action == "DELETE"){
                         try {
                             console.log("DELETING TO RECOVER NODE 1 ---- Result " + i);
-                            let sql = "DELETE FROM movies WHERE `id` = " + result[i].movie_id;
+                            let sql = "DELETE FROM movies WHERE `id` = " + result[i].id;
                             db1.query("START TRANSACTION", function(err, result){})
                             db1.query(sql, function(err, result){
                                 if (err) throw err;
@@ -121,11 +121,19 @@ function recover () {
                     else if (result[i].action == "INSERT") {
                         try {
                             console.log("INSERTING TO RECOVER NODE 1 ---- Result " + i);
-                            var post = {id: result[i].movie_id, name: result[i].name, year: result[i].year, rank: result[i].rank};
+                            var post = {id: result[i].id, name: result[i].name, year: result[i].year, rank: result[i].rank};
                             let sql = "INSERT INTO movies SET ?";
                             db1.query("START TRANSACTION", function(err, result){});
                             db1.query(sql, post, function(err, result){
-                                if (err) throw err;
+                                if (err){
+                                    if(err.code == 'ER_DUP_ENTRY' || err.errno == 1062)
+                                    {
+                                        console.log('Here you can handle duplication')
+                                    }
+                                    else{
+                                    console.log('Other error in the query')
+                                    }
+                                }
                             })
                             db1.query("COMMIT", function(err, result){});
                         } catch (err) {
@@ -138,7 +146,7 @@ function recover () {
                     else if (result[i].action == "EDIT") {
                         try {
                             console.log("EDITING TO RECOVER NODE 1 ---- Result " + i);
-                            let sql = "UPDATE movies SET `name`='" + result[i].name + "', `year`=" + result[i].year + ", `rank`=" + result[i].rank + " WHERE `id` = " + result[i].movie_id + ";";
+                            let sql = "UPDATE movies SET `name`='" + result[i].name + "', `year`=" + result[i].year + ", `rank`=" + result[i].rank + " WHERE `id` = " + result[i].id + ";";
                             db1.query("START TRANSACTION", function(err, result){});
                             db1.query(sql, function(err, result){
                                 if (err) throw err;
@@ -154,7 +162,7 @@ function recover () {
                         try {
                             console.log("\n---- INSERTING TO RECOVERY NODE 1 ----\n");
                             let sql = "INSERT INTO recovery_log SET ?";
-                            var post = {time_id: time_id, movie_id: result[i].movie_id, name: result[i].name, year: result[i].year, rank: result[i].rank, action: result[i].action};
+                            var post = {time_id: time_id, id: result[i].id, name: result[i].name, year: result[i].year, rank: result[i].rank, action: result[i].action};
                             db1.query("START TRANSACTION", function(err, result){});
                             db1.query(sql, post, function(err, result){
                             if (err) throw err;
@@ -184,10 +192,18 @@ function recover () {
                     if (result[i].action == "DELETE"){
                         try {
                             console.log("DELETING TO RECOVER NODE 2 ---- Result " + i);
-                            let sql = "DELETE FROM movies WHERE `id` = " + result[i].movie_id;
+                            let sql = "DELETE FROM movies WHERE `id` = " + result[i].id;
                             db2.query("START TRANSACTION", function(err, result){})
                             db2.query(sql, function(err, result){
-                                if (err) throw err;
+                                if (err){
+                                    if(err.code == 'ER_DUP_ENTRY' || err.errno == 1062)
+                                    {
+                                        console.log('Here you can handle duplication')
+                                    }
+                                    else{
+                                    console.log('Other error in the query')
+                                    }
+                                }
                             })
                             db2.query("COMMIT", function(err, result){});
                         } catch (err) {
@@ -200,7 +216,7 @@ function recover () {
                     else if (result[i].action == "INSERT") {
                         try {
                             console.log("INSERTING TO RECOVER NODE 2 ---- Result " + i);
-                            var post = {id: result[i].movie_id, name: result[i].name, year: result[i].year, rank: result[i].rank};
+                            var post = {id: result[i].id, name: result[i].name, year: result[i].year, rank: result[i].rank};
                             let sql = "INSERT INTO movies SET ?";
                             db2.query("START TRANSACTION", function(err, result){});
                             db2.query(sql, post, function(err, result){
@@ -218,7 +234,7 @@ function recover () {
                         if(result[i].year < 1980) {
                             try {
                                 console.log("EDITING TO RECOVER NODE 2 ---- Result " + i);
-                                let sql = "UPDATE movies SET `name`='" + result[i].name + "', `year`=" + result[i].year + ", `rank`=" + result[i].rank + " WHERE `id` = " + result[i].movie_id + ";";
+                                let sql = "UPDATE movies SET `name`='" + result[i].name + "', `year`=" + result[i].year + ", `rank`=" + result[i].rank + " WHERE `id` = " + result[i].id + ";";
                                 db2.query("START TRANSACTION", function(err, result){});
                                 db2.query(sql, function(err, result){
                                     if (err) throw err;
@@ -233,7 +249,7 @@ function recover () {
                         else if (result[i].year >= 1980) {
                             try {
                                 console.log("DELETING TO RECOVER NODE 2 ---- Result " + i);
-                                let sql = "DELETE FROM movies WHERE `id` = " + result[i].movie_id;
+                                let sql = "DELETE FROM movies WHERE `id` = " + result[i].id;
                                 db2.query("START TRANSACTION", function(err, result){})
                                 db2.query(sql, function(err, result){
                                     if (err) throw err;
@@ -246,7 +262,7 @@ function recover () {
                             }
                             try {
                                 console.log("INSERTING TO RECOVER NODE 3 ---- Result " + i);
-                                var post = {id: result[i].movie_id, name: result[i].name, year: result[i].year, rank: result[i].rank};
+                                var post = {id: result[i].id, name: result[i].name, year: result[i].year, rank: result[i].rank};
                                 let sql = "INSERT INTO movies SET ?";
                                 db3.query("START TRANSACTION", function(err, result){});
                                 db3.query(sql, post, function(err, result){
@@ -265,7 +281,7 @@ function recover () {
                         try {
                             console.log("\n---- INSERTING TO RECOVERY NODE 2 ----\n");
                             let sql = "INSERT INTO recovery_log SET ?";
-                            var post = {time_id: time_id, movie_id: result[i].movie_id, name: result[i].name, year: result[i].year, rank: result[i].rank, action: result[i].action};
+                            var post = {time_id: time_id, id: result[i].id, name: result[i].name, year: result[i].year, rank: result[i].rank, action: result[i].action};
                             db2.query("START TRANSACTION", function(err, result){});
                             db2.query(sql, post, function(err, result){
                             if (err) throw err;
@@ -295,10 +311,18 @@ function recover () {
                         if (result[i].action == "DELETE"){
                             try {
                                 console.log("DELETING TO RECOVER NODE 3 ---- Result " + i);
-                                let sql = "DELETE FROM movies WHERE `id` = " + result[i].movie_id;
+                                let sql = "DELETE FROM movies WHERE `id` = " + result[i].id;
                                 db3.query("START TRANSACTION", function(err, result){})
                                 db3.query(sql, function(err, result){
-                                    if (err) throw err;
+                                    if (err){
+                                        if(err.code == 'ER_DUP_ENTRY' || err.errno == 1062)
+                                        {
+                                            console.log('Here you can handle duplication')
+                                        }
+                                        else{
+                                        console.log('Other error in the query')
+                                        }
+                                    }
                                 })
                                 db3.query("COMMIT", function(err, result){});
                             } catch (err) {
@@ -312,7 +336,7 @@ function recover () {
                         else if (result[i].action == "INSERT") {
                             try {
                                 console.log("INSERTING TO RECOVER NODE 3 ---- Result " + i);
-                                var post = {id: result[i].movie_id, name: result[i].name, year: result[i].year, rank: result[i].rank};
+                                var post = {id: result[i].id, name: result[i].name, year: result[i].year, rank: result[i].rank};
                                 let sql = "INSERT INTO movies SET ?";
                                 db3.query("START TRANSACTION", function(err, result){});
                                 db3.query(sql, post, function(err, result){
@@ -332,7 +356,7 @@ function recover () {
                         if (result[i].year >= 1980) {
                             try {
                                 console.log("EDITING TO RECOVER NODE 3 ---- Result " + i);
-                                let sql = "UPDATE movies SET `name`='" + result[i].name + "', `year`=" + result[i].year + ", `rank`=" + result[i].rank + " WHERE `id` = " + result[i].movie_id + ";";
+                                let sql = "UPDATE movies SET `name`='" + result[i].name + "', `year`=" + result[i].year + ", `rank`=" + result[i].rank + " WHERE `id` = " + result[i].id + ";";
                                 db3.query("START TRANSACTION", function(err, result){});
                                 db3.query(sql, function(err, result){
                                     if (err) throw err;
@@ -347,7 +371,7 @@ function recover () {
                         else if (result[i].year < 1980) {
                             try {
                                 console.log("DELETING TO RECOVER NODE 3 ---- Result " + i);
-                                let sql = "DELETE FROM movies WHERE `id` = " + result[i].movie_id;
+                                let sql = "DELETE FROM movies WHERE `id` = " + result[i].id;
                                 db3.query("START TRANSACTION", function(err, result){})
                                 db3.query(sql, function(err, result){
                                     if (err) throw err;
@@ -360,7 +384,7 @@ function recover () {
                             }
                             try {
                                 console.log("INSERTING TO RECOVER NODE 2 ---- Result " + i);
-                                var post = {id: result[i].movie_id, name: result[i].name, year: result[i].year, rank: result[i].rank};
+                                var post = {id: result[i].id, name: result[i].name, year: result[i].year, rank: result[i].rank};
                                 let sql = "INSERT INTO movies SET ?";
                                 db2.query("START TRANSACTION", function(err, result){});
                                 db2.query(sql, post, function(err, result){
@@ -380,7 +404,7 @@ function recover () {
                         try {
                             console.log("\n---- INSERTING TO RECOVERY NODE 3 ----\n");
                             let sql = "INSERT INTO recovery_log SET ?";
-                            var post = {time_id: time_id, movie_id: result[i].movie_id, name: result[i].name, year: result[i].year, rank: result[i].rank, action: result[i].action};
+                            var post = {time_id: time_id, id: result[i].id, name: result[i].name, year: result[i].year, rank: result[i].rank, action: result[i].action};
                             db3.query("START TRANSACTION", function(err, result){});
                             db3.query(sql, post, function(err, result){
                             if (err) throw err;
@@ -486,9 +510,9 @@ function insertToRecover(id, name, year, rank, action) {
             headTimeId = timeId3
 
         console.log("Head Time ID: ", headTimeId);
-        var post = {time_id: headTimeId + 1, movie_id: id, name: name, year: year, rank: rank, action: action}
+        var post = {time_id: headTimeId + 1, id: id, name: name, year: year, rank: rank, action: action}
         console.log("time_id = ", post.time_id);
-        console.log("movie_id = ", post.movie_id);
+        console.log("id = ", post.id);
         console.log("name = ", post.name);
         console.log("year = ", post.year);
         console.log("rank = ", post.rank);
@@ -658,9 +682,9 @@ const controller = {
         var sqlInsert = "INSERT INTO movies SET ?";
         var post = {};
         // first finds the highest id
-        console.log("name " + req.body.name);
-        console.log("year " + req.body.year);
-        console.log("rank " + req.body.rank);
+        console.log("name: " + req.body.name);
+        console.log("year: " + req.body.year);
+        console.log("rank: " + req.body.rank);
 
         // node 1
         if (isNode1Online) {
@@ -692,6 +716,7 @@ const controller = {
                     setTimeout(function() {
                         max_row++;
                             post = {id: max_row, name: req.body.name, year: req.body.year, rank: req.body.rank};
+                            console.log("post: ", post);
                             db1.query(sqlInsert, post, (err, result) => {
                                 if (err) {
                                     return db1.rollback();
@@ -748,6 +773,7 @@ const controller = {
             // node 2
             setTimeout( function () {
                 console.log("Max Id2: " + max_row);
+                post = {id: max_row, name: req.body.name, year: req.body.year, rank: req.body.rank};
                 if (req.body.year < 1980 && isNode2Online) {
                     console.log("post: " + post);
                     try {
