@@ -49,6 +49,7 @@ function recover () {
     var timeId2 = 0;
     var timeId3 = 0;
     var headTimeId = 0;
+
     if (isNode1Online) {
         db1.query("SELECT MAX(time_id) as max_id FROM recovery_log", function (err, result1) {
             timeId1 = result1[0].max_id;
@@ -107,7 +108,9 @@ function recover () {
                             let sql = "DELETE FROM movies WHERE `id` = " + result[i].id;
                             db1.query("START TRANSACTION", function(err, result){})
                             db1.query(sql, function(err, result){
-                                if (err) throw err;
+                                if (err){
+                                    console.log(err);
+                                }
                             })
                             db1.query("COMMIT", function(err, result){});
                         } catch (err) {
@@ -126,13 +129,7 @@ function recover () {
                             db1.query("START TRANSACTION", function(err, result){});
                             db1.query(sql, post, function(err, result){
                                 if (err){
-                                    if(err.code == 'ER_DUP_ENTRY' || err.errno == 1062)
-                                    {
-                                        console.log('Here you can handle duplication')
-                                    }
-                                    else{
-                                    console.log('Other error in the query')
-                                    }
+                                    console.log(err);
                                 }
                             })
                             db1.query("COMMIT", function(err, result){});
@@ -149,7 +146,9 @@ function recover () {
                             let sql = "UPDATE movies SET `name`='" + result[i].name + "', `year`=" + result[i].year + ", `rank`=" + result[i].rank + " WHERE `id` = " + result[i].id + ";";
                             db1.query("START TRANSACTION", function(err, result){});
                             db1.query(sql, function(err, result){
-                                if (err) throw err;
+                                if (err){
+                                    console.log(err);
+                                }
                             })
                             db1.query("COMMIT", function(err, result){});
                         } catch (err) {
@@ -165,7 +164,9 @@ function recover () {
                             var post = {time_id: time_id, id: result[i].id, name: result[i].name, year: result[i].year, rank: result[i].rank, action: result[i].action};
                             db1.query("START TRANSACTION", function(err, result){});
                             db1.query(sql, post, function(err, result){
-                            if (err) throw err;
+                                if (err){
+                                    console.log(err);
+                                }
                             })
                              db1.query("COMMIT", function(err, result){ console.log(" \n\n\n I WAS HERE \n\n\n")});
                         } catch (err) {
@@ -196,13 +197,7 @@ function recover () {
                             db2.query("START TRANSACTION", function(err, result){})
                             db2.query(sql, function(err, result){
                                 if (err){
-                                    if(err.code == 'ER_DUP_ENTRY' || err.errno == 1062)
-                                    {
-                                        console.log('Here you can handle duplication')
-                                    }
-                                    else{
-                                    console.log('Other error in the query')
-                                    }
+                                    console.log(err);
                                 }
                             })
                             db2.query("COMMIT", function(err, result){});
@@ -220,7 +215,9 @@ function recover () {
                             let sql = "INSERT INTO movies SET ?";
                             db2.query("START TRANSACTION", function(err, result){});
                             db2.query(sql, post, function(err, result){
-                                if (err) throw err;
+                                if (err){
+                                    console.log(err);
+                                }
                             })
                             db2.query("COMMIT", function(err, result){});
                         } catch (err) {
@@ -237,7 +234,9 @@ function recover () {
                                 let sql = "UPDATE movies SET `name`='" + result[i].name + "', `year`=" + result[i].year + ", `rank`=" + result[i].rank + " WHERE `id` = " + result[i].id + ";";
                                 db2.query("START TRANSACTION", function(err, result){});
                                 db2.query(sql, function(err, result){
-                                    if (err) throw err;
+                                    if (err){
+                                        console.log(err);
+                                    }
                                 })
                                 db2.query("COMMIT", function(err, result){});
                             } catch (err) {
@@ -252,7 +251,9 @@ function recover () {
                                 let sql = "DELETE FROM movies WHERE `id` = " + result[i].id;
                                 db2.query("START TRANSACTION", function(err, result){})
                                 db2.query(sql, function(err, result){
-                                    if (err) throw err;
+                                    if (err){
+                                        console.log(err);
+                                    }
                                 })
                                 db2.query("COMMIT", function(err, result){});
                             } catch (err) {
@@ -266,7 +267,9 @@ function recover () {
                                 let sql = "INSERT INTO movies SET ?";
                                 db3.query("START TRANSACTION", function(err, result){});
                                 db3.query(sql, post, function(err, result){
-                                    if (err) throw err;
+                                    if (err){
+                                        console.log(err);
+                                    }
                                 })
                                 db3.query("COMMIT", function(err, result){});
                             } catch (err) {
@@ -284,7 +287,9 @@ function recover () {
                             var post = {time_id: time_id, id: result[i].id, name: result[i].name, year: result[i].year, rank: result[i].rank, action: result[i].action};
                             db2.query("START TRANSACTION", function(err, result){});
                             db2.query(sql, post, function(err, result){
-                            if (err) throw err;
+                                if (err){
+                                    console.log(err);
+                                }
                             })
                              db2.query("COMMIT", function(err, result){});
                         } catch (err) {
@@ -315,13 +320,7 @@ function recover () {
                                 db3.query("START TRANSACTION", function(err, result){})
                                 db3.query(sql, function(err, result){
                                     if (err){
-                                        if(err.code == 'ER_DUP_ENTRY' || err.errno == 1062)
-                                        {
-                                            console.log('Here you can handle duplication')
-                                        }
-                                        else{
-                                        console.log('Other error in the query')
-                                        }
+                                        console.log(err);
                                     }
                                 })
                                 db3.query("COMMIT", function(err, result){});
@@ -340,7 +339,9 @@ function recover () {
                                 let sql = "INSERT INTO movies SET ?";
                                 db3.query("START TRANSACTION", function(err, result){});
                                 db3.query(sql, post, function(err, result){
-                                    if (err) throw err;
+                                    if (err){
+                                        console.log(err);
+                                    }
                                 })
                                 db3.query("COMMIT", function(err, result){});
                             } catch (err) {
@@ -359,7 +360,9 @@ function recover () {
                                 let sql = "UPDATE movies SET `name`='" + result[i].name + "', `year`=" + result[i].year + ", `rank`=" + result[i].rank + " WHERE `id` = " + result[i].id + ";";
                                 db3.query("START TRANSACTION", function(err, result){});
                                 db3.query(sql, function(err, result){
-                                    if (err) throw err;
+                                    if (err){
+                                        console.log(err);
+                                    }
                                 })
                                 db3.query("COMMIT", function(err, result){});
                             } catch (err) {
@@ -374,7 +377,9 @@ function recover () {
                                 let sql = "DELETE FROM movies WHERE `id` = " + result[i].id;
                                 db3.query("START TRANSACTION", function(err, result){})
                                 db3.query(sql, function(err, result){
-                                    if (err) throw err;
+                                    if (err){
+                                        console.log(err);
+                                    }
                                 })
                                 db3.query("COMMIT", function(err, result){});
                             } catch (err) {
@@ -388,7 +393,9 @@ function recover () {
                                 let sql = "INSERT INTO movies SET ?";
                                 db2.query("START TRANSACTION", function(err, result){});
                                 db2.query(sql, post, function(err, result){
-                                    if (err) throw err;
+                                    if (err){
+                                        console.log(err);
+                                    }
                                 })
                                 db2.query("COMMIT", function(err, result){});
                             } catch (err) {
@@ -407,7 +414,9 @@ function recover () {
                             var post = {time_id: time_id, id: result[i].id, name: result[i].name, year: result[i].year, rank: result[i].rank, action: result[i].action};
                             db3.query("START TRANSACTION", function(err, result){});
                             db3.query(sql, post, function(err, result){
-                            if (err) throw err;
+                                if (err){
+                                    console.log(err);
+                                }
                             })
                              db3.query("COMMIT", function(err, result){});
                         } catch (err) {
@@ -484,6 +493,8 @@ function insertToRecover(id, name, year, rank, action) {
         
     }
 
+    console.log(yimeID1, " ", timeId2, " ", timeId3);
+
     setTimeout(function(){
         if (timeId1 == null) {
             timeId1 = 0;
@@ -524,7 +535,9 @@ function insertToRecover(id, name, year, rank, action) {
                 let sql = "INSERT INTO recovery_log SET ?";
                 db1.query("START TRANSACTION", function(err, result){});
                 db1.query(sql, post, function(err, result){
-                if (err) throw err;
+                    if (err){
+                        console.log(err);
+                    }
                 })
                  db1.query("COMMIT", function(err, result){});
             } catch (err) {
@@ -539,7 +552,9 @@ function insertToRecover(id, name, year, rank, action) {
                 let sql = "INSERT INTO recovery_log SET ?";
                 db2.query("START TRANSACTION", function(err, result){});
                 db2.query(sql, post, function(err, result){
-                    if (err) throw err;
+                    if (err){
+                        console.log(err);
+                    }
                 })
                 db2.query("COMMIT", function(err, result){});
             } catch (err) {
@@ -554,7 +569,9 @@ function insertToRecover(id, name, year, rank, action) {
                 let sql = "INSERT INTO recovery_log SET ?";
                 db3.query("START TRANSACTION", function(err, result){});
                 db3.query(sql, post, function(err, result){
-                    if (err) throw err;
+                    if (err){
+                        console.log(err);
+                    }
                 })
                 db3.query("COMMIT", function(err, result){});
             } catch (err) {
