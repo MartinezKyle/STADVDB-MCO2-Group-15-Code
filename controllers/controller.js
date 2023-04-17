@@ -493,7 +493,7 @@ function insertToRecover(id, name, year, rank, action) {
         
     }
 
-    console.log(yimeID1, " ", timeId2, " ", timeId3);
+    console.log(timeId1, " ", timeId2, " ", timeId3);
 
     setTimeout(function(){
         if (timeId1 == null) {
@@ -593,7 +593,9 @@ const controller = {
         setTimeout(function(){
             if (isNode1Online) {
                 db1.query(sql, function(err, results) {
-                    if(err) throw err;
+                    if (err){
+                        console.log(err);
+                    }
                     const numOfResults = results[0].count;
                     const numberOfPages = Math.ceil(numOfResults/limit);
                     page = req.query.page ? Number(req.query.page) : 1;
@@ -607,7 +609,9 @@ const controller = {
                     const startingLimit = (page - 1) * limit;
                     sql = `SELECT * FROM movies ORDER BY id DESC LIMIT ${startingLimit}, ` + limit;
                     db1.query(sql, function(err, results){
-                        if (err) throw err;
+                        if (err){
+                            console.log(err);
+                        }
                         let iterator = (page - 5) < 1 ? 1 : page - 5;
                         let endingLink = (iterator + 9) <= numberOfPages ? (iterator + 9) : page + (numberOfPages - page);
                         console.log(page, ", ", iterator, ", ", endingLink, ", ");
@@ -649,7 +653,9 @@ const controller = {
             db1.query("START TRANSACTION", function (err, result) {
             });
             db1.query(sqlSelect, (err, result) => {
-                if (err) throw err;
+                if (err){
+                    console.log(err);
+                }
                 console.log(result);
                 res.render('edit-movie', {name: result[0].name, year: result[0].year, rank: result[0].rank, id: id})
             });
@@ -663,7 +669,9 @@ const controller = {
             db2.query("START TRANSACTION", function (err, result) {
             });
             db2.query(sqlSelect, (err, result) => {
-                if (err) throw err;
+                if (err){
+                    console.log(err);
+                }
                 console.log(result);
                 res.render('edit-movie', {name: result[0].name, year: result[0].year, rank: result[0].rank, id: id})
             });
@@ -677,7 +685,9 @@ const controller = {
             db3.query("START TRANSACTION", function (err, result) {
             });
             db3.query(sqlSelect, (err, result) => {
-                if (err) throw err;
+                if (err){
+                    console.log(err);
+                }
                 console.log(result);
                 res.render('edit-movie', {name: result[0].name, year: result[0].year, rank: result[0].rank, id: id})
             });
@@ -764,14 +774,18 @@ const controller = {
                 db2.query("SELECT MAX(id) AS max_row2 FROM movies", function(err, results) {
                     if (err) { 
                         console.log("Error db2");
-                        throw err
+                        if (err){
+                            console.log(err);
+                        }
                     }
                     max_row = results[0].max_row2;
                     db3.query("START TRANSACTION", function(err){});
                     db3.query("SELECT MAX(id) AS max_row3 FROM movies", function(err, results) {
                         if (err) { 
                             console.log("Error db3");
-                            throw err
+                            if (err){
+                                console.log(err);
+                            }
                         }
                         if (results[0].max_row3 > max_row) {
                             max_row = results[0].max_row3;
@@ -797,7 +811,9 @@ const controller = {
                         db2.query("START TRANSACTION", function (err, result) {
                         });
                         db2.query(sqlInsert, post, (err, result) => {
-                            if (err) throw err;
+                            if (err){
+                                console.log(err);
+                            }
                             console.log(result);
                         });
                         db2.query("COMMIT", function (err, result) {
@@ -817,11 +833,15 @@ const controller = {
                         db3.query("START TRANSACTION", function (err, result) {
                         });
                         db3.query(sqlInsert, post, function (err, result) {
-                            if (err) throw err;
+                            if (err){
+                                console.log(err);
+                            }
                             console.log(result);
                         });
                         db3.query("COMMIT", function (err, result) {
-                            if (err) throw err;
+                            if (err){
+                                console.log(err);
+                            };
                         });
                     } catch (err) {
                         db3.rollback();
@@ -883,7 +903,9 @@ const controller = {
                         db2.query("START TRANSACTION", function (err) {
                         });
                         db2.query(sqlUpdate, (err, result) => {
-                            if (err) throw err;
+                            if (err){
+                                console.log(err);
+                            }
                             console.log(result);
                         });
                         db2.query("COMMIT", function(err) {
@@ -902,7 +924,9 @@ const controller = {
                         db2.query("START TRANSACTION", function (err) {
                         });
                         db2.query(sqlDelete, (err, result) => {
-                            if (err) throw err;
+                            if (err){
+                                console.log(err);
+                            }
                             console.log("Query Deleted");
                         });  
                         db2.query("COMMIT", function(err){
@@ -921,7 +945,9 @@ const controller = {
                             sqlInsert = "INSERT INTO movies SET ?"
                             db3.query("START TRANSACTION", function(err){});
                             db3.query(sqlInsert, post, (err, result) => {
-                                if (err) throw err;
+                                if (err){
+                                    console.log(err);
+                                }
                                 console.log(result);
                             });
                             db3.query("COMMIT", function(err) {});
@@ -941,7 +967,9 @@ const controller = {
                         console.log("Updating Node 3");
                         db3.query("START TRANSACTION", function(err){});
                         db3.query(sqlUpdate, (err, result) => {
-                            if (err) throw err;
+                            if (err){
+                                console.log(err);
+                            }
                             console.log(result);
                         });
                         db3.query("COMMIT", function(err) {});
@@ -958,7 +986,9 @@ const controller = {
                         console.log("Deleting to Node 3");
                         db3.query("START TRANSACTION", function(err){});
                         db3.query( sqlDelete, (err, result) => {
-                            if (err) throw err;
+                            if (err){
+                                console.log(err);
+                            }
                             console.log("Query Deleted");
                         });                        
                         db3.query("COMMIT", function(err){});
@@ -976,7 +1006,9 @@ const controller = {
                             sqlInsert = "INSERT INTO movies SET ?";
                             db2.query("START TRANSACTION", function(err) {});
                             db2.query(sqlInsert, post, (err, result) => {
-                                if (err) throw err;
+                                if (err){
+                                    console.log(err);
+                                }
                                 console.log(result);
                             });
                             db2.query("COMMIT", function(err){});
@@ -1039,7 +1071,9 @@ const controller = {
                     console.log("Deleting to Node 2");
                     db2.query("START TRANSACTION", function(){});
                     db2.query(sqlDelete, (err, result) => {
-                        if (err) throw err;
+                        if (err){
+                            console.log(err);
+                        }
                         console.log("Query Deleted");
                     });  
                     db2.query("COMMIT", function(){});
@@ -1055,7 +1089,9 @@ const controller = {
                     console.log("Deleting to Node 3");
                     db3.query("START TRANSACTION", function(err){});
                     db3.query( sqlDelete, (err, result) => {
-                        if (err) throw err;
+                        if (err){
+                            console.log(err);
+                        }
                         console.log("Query Deleted");
                     });  
                     db3.query("COMMIT", function(err){});

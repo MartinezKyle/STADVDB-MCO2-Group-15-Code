@@ -5,7 +5,10 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body>
-        <h1 style="text-align: center;">MC02 Transaction Management </h1><a href="/add-movie" ><button id="add-movie" style="margin-right: auto; margin-left: auto; display: block">Add Movie</button></a>
+        <div>
+            <h1 style="text-align: center;">MC02 Transaction Management </h1><a href="/add-movie" >
+            <button id="add-movie" style="align: right; margin-right: auto; margin-left: auto; size: 15px; position: absolute; top: 10; right: 30"> Add Movie</button></a>
+        </div>
         <br>
         <table>
             <thead>
@@ -19,7 +22,7 @@
                 <tbody>
                 {{#each movies}}
                     <tr>
-                        <td>{{name}}</td>
+                        <td id="movie_name">{{name}}</td>
                         <td>{{year}}</td>
                         <td>{{rank}}</td>
                         <td>
@@ -36,15 +39,15 @@
         {{#pagination currentPage pageCount size}}
             <div class="pagination">
             {{#unless startFromFirstPage}}
-                <a href="/?page=1">&lt;</a>
+                <a href="/?page=1" id="paginate_no">&lt;</a>
             {{/unless}}
             
             {{#each pages}}
                 {{#if isCurrent}}
-                <a href="/?page={{page}}">[{{page}}]</a>
+                <a href="/?page={{page}}" id="paginate_no">[{{page}}]</a>
                 {{/if}}
                 {{#unless isCurrent}}
-                <a href="/?page={{page}}" >{{page}}</a>
+                <a href="/?page={{page}}" id="paginate_no">{{page}}</a>
                 {{/unless}}
             {{/each}}
             
