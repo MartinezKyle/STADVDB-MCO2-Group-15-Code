@@ -4,9 +4,9 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const mysql = require('mysql');
 const routes = require('./routes/routes.js');
+require('dotenv').config()
 
 const app = express();
-const port = 3000; //Port number
 
 app.use(express.static(__dirname + "/public"));
 
@@ -33,7 +33,7 @@ const connection = mysql.createConnection({
   connection.end((error) => {
   });
 */
-
+const port = process.env.PORT || 8080;
 app.listen(port, () => {
     console.log("Currently listening at Port " + port);
 });
