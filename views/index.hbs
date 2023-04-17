@@ -1,4 +1,4 @@
-<html lang="en">
+{{!-- <html lang="en">
 
     <head>
         <!--<link rel="stylesheet" href="/css/style.css" />-->
@@ -10,4 +10,57 @@
     <body>
         <h1>Hello, World!</h1>
     </body>
-</html>
+</html> --}}
+
+<!-- index.hbs -->
+<html>
+<head>
+    <title>MC02 Transactions</title>
+    <link rel="stylesheet" href="css\style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1 style="text-align: center;">MC02 Transaction Management </h1>
+    <a href="/add-movie" ><button id="add-movie" style="margin-right: auto; margin-left: auto; display: block">Add Movie</button></a>
+    <br>
+    <table>
+        <thead>
+            <tr>
+                <th id="title">Title</th>
+                <th id="year">Year</th>
+                <th id="rank">Rank</th>
+                <th id="Actions">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each movies}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{year}}</td>
+                <td>{{rank}}</td>
+                <td>
+                    <a href="/edit-movie/{{id}}-{{year}}"><button id="edit-button">Edit</button></a>
+                    <a href="/delete-movie/{{id}}-{{year}}-{{name}}-{{rank}}"><button id="delete-button">Delete</button></a>
+                </td>
+            </tr>
+            {{else}}
+            <p>No movies to display</p>
+            {{/each}}
+        </tbody>
+    </table>
+    <br>
+
+    <!-- Edit Movie Form -->
+    <div class="container">
+        <a href="/"><button id="back-button">Back</button></a>
+        <h1>Edit Movie</h1>        
+        <label>Movie Title</label>
+        <input type="text" name="name" class="name" id="name" value="{{name}}" required><br>
+        <label for="year">Year of Release</label>
+        <select id="year" name="year" required>
+            <option value="" selected> {{year}}</option>
+        </select><br>
+        <label>Rank</label>
+        <input type="text" name="rank" class="rank" id="rank" value="{{rank}}" required><br>
+        <button id="submit" >Submit</button>
+        <span
