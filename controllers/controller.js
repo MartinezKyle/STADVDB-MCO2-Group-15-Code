@@ -742,7 +742,6 @@ const controller = {
     
                     setTimeout(function() {
                         max_row++;
-                        console.log(max_row);
                             post = {id: max_row, name: req.body.name, year: req.body.year, rank: req.body.rank};
                             console.log("post: ", post);
                             db1.query(sqlInsert, post, (err, result) => {
@@ -780,32 +779,31 @@ const controller = {
                         }
                     }
                     max_row = results[0].max_row2;
-                    console.log("MaxRow2 = ", results[0].max_row2);
+                    db3.query("START TRANSACTION", function(err){});
+                    db3.query("SELECT MAX(id) AS max_row3 FROM movies", function(err, results) {
+                        if (err) { 
+                            console.log("Error db3");
+                            if (err){
+                                console.log(err);
+                            }
+                        }
+                        if (results[0].max_row3 > max_row) {
+                            max_row = results[0].max_row3;
+                        
+                        console.log("Max Id3: ", max_row);
+                            
+                        max_row++;
+                        post = {id: max_row, name: req.body.name, year: req.body.year, rank: req.body.rank};
+                        }
+                    });
+                    db3.query("COMMIT", function(err){});
                 });
                 db2.query("COMMIT", function(err){});
-                db3.query("START TRANSACTION", function(err){});
-                    db3.query("SELECT MAX(id) AS max_row3 FROM movies", function(err, results) {
-                    console.log("MaxRow3 = ", results[0].max_row3);
-                    if (err) { 
-                        console.log("Error db3");
-                        if (err){
-                            console.log(err);
-                        }
-                    }
-                    console.log("Max Id3: ", results[0].max_row3);
-                    if (results[0].max_row3 > max_row) {
-                        max_row = results[0].max_row3;
-                    }
-                    console.log("Max IdF: ", max_row);
-                    post = {id: max_row, name: req.body.name, year: req.body.year, rank: req.body.rank};
-                });
-                db3.query("COMMIT", function(err){});
             }
             
             // node 2
             setTimeout( function () {
-                max_row++
-                console.log("Max Id before insert: " + max_row);
+                console.log("Max Id2: " + max_row);
                 post = {id: max_row, name: req.body.name, year: req.body.year, rank: req.body.rank};
                 if (req.body.year < 1980 && isNode2Online) {
                     console.log("post: " + post);
