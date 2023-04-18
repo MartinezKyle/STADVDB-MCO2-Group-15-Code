@@ -1,1 +1,4 @@
-# STADVDB-MCO2-Group-3
+To Run
+
+npm install -f
+node index.js
