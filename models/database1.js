@@ -14,6 +14,7 @@ var config = {
 if(process.env.NODE_ENV === 'production') {
   console.log('Running from cloud. Connecting to DB through GCP socket.');
   config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME1}`;
+  console.log(`/cloudsql/${process.env.INSTANCE_CONNECTION_NAME1}`);
 }
 
 else {
