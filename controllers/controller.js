@@ -647,7 +647,7 @@ const controller = {
     },
     getEdit: function (req, res) {
         var id = req.params.id;
-        var year = req.params.id;
+        var year = req.params.year;
         var sqlSelect = "SELECT * FROM movies WHERE `id` = " + id;
         if (isNode1Online) {
             db1.query("START TRANSACTION", function (err, result) {
