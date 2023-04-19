@@ -592,8 +592,8 @@ const controller = {
         let page = req.query.page ? Number(req.query.page) : 1;
         let sql = "SELECT COUNT(*) as count FROM movies";
         setTimeout(function(){
-            if (isNode2Online){
-                db2.query(sql, function(err, results) {
+            if (isNode3Online){
+                db3.query(sql, function(err, results) {
                     if (err){
                         console.log(err);
                     }
@@ -608,7 +608,7 @@ const controller = {
                                     // Determine the SQL Limit starting number
                     const startingLimit = (page - 1) * limit;
                     sql = `SELECT * FROM movies ORDER BY id DESC LIMIT ${startingLimit}, ` + limit;
-                    db2.query(sql, function(err, results){
+                    db3.query(sql, function(err, results){
                         if (err){
                             console.log(err);
                         }
@@ -625,7 +625,7 @@ const controller = {
                 });
             }
             else{
-                let sql = "SELECT * FROM movies WHERE year < 1980 ORDER BY id DESC LIMIT 20";
+                let sql = "SELECT * FROM movies WHERE year >= 1980 ORDER BY id DESC LIMIT 20";
                 db1.query(sql, function(err, results){
                     if (err){
                         console.log(err);
