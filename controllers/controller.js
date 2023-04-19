@@ -99,6 +99,7 @@ function recover () {
             console.log("\n ------ RECOVERING TO NODE 1 ------ \n")
             let sql = "SELECT * FROM recovery_log WHERE `time_id` > " + timeId1;
             db2.query(sql, function(err, result){
+                console.log(result);
                 var time_id = timeId1+1;
                 for (var i = 0; i < headTimeId-timeId1; i++) {
                     console.log("\n -------- RESULT " + i + " -------- \n");
@@ -208,7 +209,7 @@ function recover () {
                         }
                     }
 
-                    else if (result[i].action == "INSERT") {
+                    else if (result[i].action == "INSERT" && result[i].year < 1980) {
                         try {
                             console.log("INSERTING TO RECOVER NODE 2 ---- Result " + i);
                             var post = {id: result[i].id, name: result[i].name, year: result[i].year, rank: result[i].rank};
@@ -332,7 +333,7 @@ function recover () {
                             
                         }
     
-                        else if (result[i].action == "INSERT") {
+                        else if (result[i].action == "INSERT" && result[i].year >= 1980) {
                             try {
                                 console.log("INSERTING TO RECOVER NODE 3 ---- Result " + i);
                                 var post = {id: result[i].id, name: result[i].name, year: result[i].year, rank: result[i].rank};
@@ -733,9 +734,8 @@ const controller = {
                     });
     
                     setTimeout(function() {
-                        max_row++;
                         console.log(max_row);
-                            post = {id: max_row, name: req.body.name, year: req.body.year, rank: req.body.rank};
+                            post = {id: max_row + 1, name: req.body.name, year: req.body.year, rank: req.body.rank};
                             console.log("post: ", post);
                             db1.query(sqlInsert, post, (err, result) => {
                                 if (err) {
@@ -796,9 +796,8 @@ const controller = {
             
             // node 2
             setTimeout( function () {
-                max_row++
                 console.log("Max Id before insert: " + max_row);
-                post = {id: max_row, name: req.body.name, year: req.body.year, rank: req.body.rank};
+                post = {id: max_row + 1, name: req.body.name, year: req.body.year, rank: req.body.rank};
                 if (req.body.year < 1980 && isNode2Online) {
                     console.log("post: " + post);
                     try {
@@ -847,7 +846,7 @@ const controller = {
                 console.log("name = ", post.name);
                 console.log("year = ", post.year);
                 console.log("rank = ", post.rank);
-                insertToRecover(max_row, post.name, post.year, post.rank, "INSERT");
+                insertToRecover(max_row + 1, post.name, post.year, post.rank, "INSERT");
                 
                 
             }, 500);
